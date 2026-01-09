@@ -3799,6 +3799,118 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7058301670880791885, guid: 4b71136c48db2491cb3ba9f0230a2f15, type: 3}
   m_PrefabInstance: {fileID: 853397061}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &576097902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576097904}
+  - component: {fileID: 576097903}
+  m_Layer: 0
+  m_Name: Spline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &576097903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576097902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineContainer
+  m_Spline:
+    m_EditModeType: 1
+    m_Knots: []
+    m_MetaData: []
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Splines:
+  - m_EditModeType: 1
+    m_Knots:
+    - Position:
+        x: -850
+        y: 0
+        z: 0
+      TangentIn:
+        x: 0
+        y: 0
+        z: -1853.562
+      TangentOut:
+        x: 0
+        y: 0
+        z: 1853.562
+      Rotation:
+        value:
+          x: 0.49936923
+          y: 0.500631
+          z: 0.50063086
+          w: 0.49936736
+    - Position:
+        x: 850
+        y: 0
+        z: 0
+      TangentIn:
+        x: 0
+        y: 0
+        z: -170
+      TangentOut:
+        x: 0
+        y: 0
+        z: 170
+      Rotation:
+        value:
+          x: 0.5
+          y: 0.5
+          z: 0.5
+          w: 0.5
+    m_MetaData:
+    - Mode: 2
+      Tension: 0.5
+    - Mode: 2
+      Tension: 0.5
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Knots:
+    m_KnotsLink: []
+--- !u!4 &576097904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576097902}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1454698554}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &576730899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8661,6 +8773,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1779602246}
+  - {fileID: 576097904}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -10420,6 +10533,7 @@ GameObject:
   - component: {fileID: 1779602246}
   - component: {fileID: 1779602248}
   - component: {fileID: 1779602247}
+  - component: {fileID: 1779602249}
   m_Layer: 5
   m_Name: Deck Area
   m_TagString: Untagged
@@ -10443,8 +10557,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -395}
-  m_SizeDelta: {x: -200, y: -810}
+  m_AnchoredPosition: {x: 0, y: -400.5}
+  m_SizeDelta: {x: -200, y: -799}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1779602247
 MonoBehaviour:
@@ -10484,6 +10598,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779602245}
   m_CullTransparentMesh: 1
+--- !u!114 &1779602249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779602245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb851e846900f48dd997fa65d51ec7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  slideDuration: 0.5
+  maxHandSize: 100
+  cardPrefab: {fileID: 784617739068416240, guid: ebe657f1045f149bc84fc9068365b694, type: 3}
+  splineContainer: {fileID: 576097903}
+  deck: {fileID: 1779602246}
+  inputReader: {fileID: 11400000, guid: 68027c1479b6d4f3197b6fef087cfd2f, type: 2}
 --- !u!4 &1790663854 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7058301670880791885, guid: c4e405d074a7941c4ad81f2732d2d7f8, type: 3}

@@ -10,6 +10,7 @@ public class InputReader : ScriptableObject, Controls.IPlayerActions
     public event Action<float> ZoomEvent;
     public event Action<bool> LeftClick;
     public event Action<bool> RightClick;
+    public event Action SpaceBar;
 
     void OnEnable()
     {
@@ -31,7 +32,7 @@ public class InputReader : ScriptableObject, Controls.IPlayerActions
         }
     }
 
-  public void SetPlayer()
+    public void SetPlayer()
     {
         controls.Player.Enable();
     }
@@ -48,18 +49,24 @@ public class InputReader : ScriptableObject, Controls.IPlayerActions
         ZoomEvent?.Invoke(zoomValue);
     }
 
-  public void OnSelected(InputAction.CallbackContext context)
-  {
-    if(context.control == Mouse.current.leftButton)
+    public void OnMouseButton(InputAction.CallbackContext context)
     {
-        if(context.started) LeftClick?.Invoke(true);
-        if(context.canceled) LeftClick?.Invoke(false);
+        if(context.control == Mouse.current.leftButton)
+        {
+            if(context.started) LeftClick?.Invoke(true);
+            if(context.canceled) LeftClick?.Invoke(false);
+        }
+
+        if(context.control == Mouse.current.rightButton)
+        {
+            if(context.started) RightClick?.Invoke(true);
+            if(context.canceled) RightClick?.Invoke(false);
+        }
     }
 
-    if(context.control == Mouse.current.rightButton)
+    public void OnSpaceBar(InputAction.CallbackContext context)
     {
-        if(context.started) RightClick?.Invoke(true);
-        if(context.canceled) RightClick?.Invoke(false);
+        if(context.started) SpaceBar?.Invoke();
     }
-  }
+
 }

@@ -25,9 +25,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Selected",
+                    "name": "MouseButton",
                     "type": "Button",
                     "id": "4725e839-128b-45b4-b57d-5759b814e1f4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SpaceBar",
+                    "type": "Button",
+                    "id": "caf3aba9-cc34-4659-a441-d906ab4876ab",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -152,7 +161,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Selected",
+                    "action": "MouseButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -163,7 +172,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Selected",
+                    "action": "MouseButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1f47338-8f1e-493b-a61b-c9b5339363c4",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SpaceBar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

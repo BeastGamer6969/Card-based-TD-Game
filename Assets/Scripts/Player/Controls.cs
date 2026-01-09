@@ -111,9 +111,18 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Selected"",
+                    ""name"": ""MouseButton"",
                     ""type"": ""Button"",
                     ""id"": ""4725e839-128b-45b4-b57d-5759b814e1f4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SpaceBar"",
+                    ""type"": ""Button"",
+                    ""id"": ""caf3aba9-cc34-4659-a441-d906ab4876ab"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -238,7 +247,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Selected"",
+                    ""action"": ""MouseButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -249,7 +258,18 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Selected"",
+                    ""action"": ""MouseButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1f47338-8f1e-493b-a61b-c9b5339363c4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpaceBar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -262,7 +282,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
-        m_Player_Selected = m_Player.FindAction("Selected", throwIfNotFound: true);
+        m_Player_MouseButton = m_Player.FindAction("MouseButton", throwIfNotFound: true);
+        m_Player_SpaceBar = m_Player.FindAction("SpaceBar", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -345,7 +366,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Zoom;
-    private readonly InputAction m_Player_Selected;
+    private readonly InputAction m_Player_MouseButton;
+    private readonly InputAction m_Player_SpaceBar;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -366,9 +388,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Selected".
+        /// Provides access to the underlying input action "Player/MouseButton".
         /// </summary>
-        public InputAction @Selected => m_Wrapper.m_Player_Selected;
+        public InputAction @MouseButton => m_Wrapper.m_Player_MouseButton;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SpaceBar".
+        /// </summary>
+        public InputAction @SpaceBar => m_Wrapper.m_Player_SpaceBar;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -401,9 +427,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Zoom.started += instance.OnZoom;
             @Zoom.performed += instance.OnZoom;
             @Zoom.canceled += instance.OnZoom;
-            @Selected.started += instance.OnSelected;
-            @Selected.performed += instance.OnSelected;
-            @Selected.canceled += instance.OnSelected;
+            @MouseButton.started += instance.OnMouseButton;
+            @MouseButton.performed += instance.OnMouseButton;
+            @MouseButton.canceled += instance.OnMouseButton;
+            @SpaceBar.started += instance.OnSpaceBar;
+            @SpaceBar.performed += instance.OnSpaceBar;
+            @SpaceBar.canceled += instance.OnSpaceBar;
         }
 
         /// <summary>
@@ -421,9 +450,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Zoom.started -= instance.OnZoom;
             @Zoom.performed -= instance.OnZoom;
             @Zoom.canceled -= instance.OnZoom;
-            @Selected.started -= instance.OnSelected;
-            @Selected.performed -= instance.OnSelected;
-            @Selected.canceled -= instance.OnSelected;
+            @MouseButton.started -= instance.OnMouseButton;
+            @MouseButton.performed -= instance.OnMouseButton;
+            @MouseButton.canceled -= instance.OnMouseButton;
+            @SpaceBar.started -= instance.OnSpaceBar;
+            @SpaceBar.performed -= instance.OnSpaceBar;
+            @SpaceBar.canceled -= instance.OnSpaceBar;
         }
 
         /// <summary>
@@ -479,11 +511,18 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnZoom(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Selected" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "MouseButton" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSelected(InputAction.CallbackContext context);
+        void OnMouseButton(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SpaceBar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpaceBar(InputAction.CallbackContext context);
     }
 }
