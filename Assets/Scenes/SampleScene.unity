@@ -3845,35 +3845,35 @@ MonoBehaviour:
   - m_EditModeType: 1
     m_Knots:
     - Position:
-        x: -850
+        x: -754
         y: 0
         z: 0
       TangentIn:
         x: 0
         y: 0
-        z: -1853.562
+        z: -1853
       TangentOut:
         x: 0
         y: 0
-        z: 1853.562
+        z: 1853
       Rotation:
         value:
-          x: 0.49936923
-          y: 0.500631
-          z: 0.50063086
-          w: 0.49936736
+          x: 0.50000256
+          y: 0.5
+          z: 0.50000006
+          w: 0.4999975
     - Position:
-        x: 850
+        x: 754
         y: 0
         z: 0
       TangentIn:
         x: 0
         y: 0
-        z: -170
+        z: -1127
       TangentOut:
         x: 0
         y: 0
-        z: 170
+        z: 1127
       Rotation:
         value:
           x: 0.5
@@ -10611,7 +10611,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   slideDuration: 0.5
-  maxHandSize: 100
+  maxHandSize: 20
+  spreadCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.46194753
+      value: 0.81232923
+      inSlope: 0.40383434
+      outSlope: 0.40383434
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.119631976
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  handCards: []
   cardPrefab: {fileID: 784617739068416240, guid: ebe657f1045f149bc84fc9068365b694, type: 3}
   splineContainer: {fileID: 576097903}
   deck: {fileID: 1779602246}

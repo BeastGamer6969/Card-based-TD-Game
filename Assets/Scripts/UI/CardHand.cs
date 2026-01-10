@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -12,7 +13,10 @@ public class CardHand : MonoBehaviour
     [SerializeField] List<CardData> handCards = new List<CardData>();
 
     [Header("References")]
+    [SerializeField] RectTransform Card;
     [SerializeField] GameObject cardPrefab;
+    [SerializeField] RectTransform Shadow;
+     [SerializeField] GameObject ShadowcardPrefab;
     [SerializeField] SplineContainer splineContainer;
     [SerializeField] RectTransform deck;
 
@@ -25,20 +29,22 @@ public class CardHand : MonoBehaviour
         inputReader.SpaceBar += DrawCard;
     }
 
-    void Update()
-    {
-        UpdateCardPositions();
-    }
     void DrawCard()
     {
         if (handCards.Count >= maxHandSize) return;
-        GameObject cardGO = Instantiate(cardPrefab, deck);
-        RectTransform rt = cardGO.GetComponent<RectTransform>();
 
-        rt.anchoredPosition = Vector2.zero;
-        rt.localRotation = Quaternion.identity;
+        GameObject cardGO = Instantiate(cardPrefab, Card);
+        GameObject shadowGO = Instantiate(ShadowcardPrefab, Shadow);
 
-        handCards.Add(new CardData{CardTransform = rt, IsSelected = false});
+        RectTransform Cardrt = cardGO.GetComponent<RectTransform>();
+        RectTransform Shadowrt = shadowGO.GetComponent<RectTransform>();
+
+        Cardrt.anchoredPosition = Vector2.zero;
+        Cardrt.localRotation = Quaternion.identity;
+        Shadowrt.anchoredPosition = Vector2.zero;
+        Shadowrt.localRotation = Quaternion.identity;
+
+        handCards.Add(new CardData{CardTransform = Cardrt, IsSelected = false, ShadowCardTransform = Shadowrt});
         UpdateCardPositions();
     }
 
@@ -48,35 +54,19 @@ public class CardHand : MonoBehaviour
 
         Spline spline = splineContainer.Spline;
 
-        float spacing = 1f / maxHandSize;
+        for (int CardIndex = 0; CardIndex < handCards.Count; CardIndex++){
+            float Position = CardSpacing(CardIndex);
 
-        for (int i = 0; i < handCards.Count; i++){
-            handCards[i].CardTransform.GetChild(0).gameObject.SetActive(true);
+            Vector3 localPos = spline.EvaluatePosition(Position);
 
-            float p = CardSpacing(i);
-
-            // UI-local position directly from spline
-            Vector3 localPos = spline.EvaluatePosition(p);
-
-            // Rotation along spline
-            Vector3 tangent = spline.EvaluateTangent(p);
+            Vector3 tangent = spline.EvaluateTangent(Position);
             float angle = Mathf.Atan2(tangent.y, tangent.x) * Mathf.Rad2Deg;
 
-            RectTransform card = handCards[i].CardTransform;
             Quaternion targetRot = Quaternion.Euler(0f, 0f, angle);
 
-            if (
-                Vector2.Distance(card.anchoredPosition, localPos) < 0.1f &&
-                Quaternion.Angle(card.localRotation, targetRot) < 0.5f
-            )
-                continue;
-
-            card.DOKill();
-            card.DOAnchorPos(localPos, slideDuration);
-            card.DOLocalRotateQuaternion(targetRot, slideDuration);
+            MoveCard(handCards[CardIndex].CardTransform, targetRot, localPos, Vector3.zero);
+            MoveCard(handCards[CardIndex].ShadowCardTransform, targetRot, localPos, new Vector3(0, 5, 0));
         }
-
-        handCards[0].CardTransform.GetChild(0).gameObject.SetActive(false);
     }
 
     public float CardSpacing(int CardIndex)
@@ -88,10 +78,23 @@ public class CardHand : MonoBehaviour
         float adjustedNormalizedPosition = 0.5f + (normalizedCardPosition - 0.5f) * handSpread;
         return adjustedNormalizedPosition;
     }
+
+    public void MoveCard(RectTransform card, quaternion Rotation, Vector3 Position, Vector3 Offset)
+    {
+        if (
+            Vector2.Distance(card.anchoredPosition, Position - Offset) < 0.1f &&
+            Quaternion.Angle(card.localRotation, Rotation) < 0.5f
+            ) return;
+
+        card.DOKill();
+        card.DOAnchorPos(Position - Offset, slideDuration);
+        card.DOLocalRotateQuaternion(Rotation, slideDuration);
+    }
 }
-[System.Serializable]
-internal class CardData
+
+[System.Serializable] internal class CardData
 {
     public RectTransform CardTransform;
+    public RectTransform ShadowCardTransform;
     public bool IsSelected;
 }
