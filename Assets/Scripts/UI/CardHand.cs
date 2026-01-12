@@ -4,20 +4,22 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class CardHand : MonoBehaviour
+public class CardHandler : MonoBehaviour
 {
     [Header("CardInfo")]
     [SerializeField] float slideDuration = 0.5f;
     [SerializeField] int maxHandSize = 5;
     [SerializeField] AnimationCurve spreadCurve;
-    [SerializeField] List<CardData> handCards = new List<CardData>();
+    public List<CardData> handCards = new List<CardData>();
 
     [Header("References")]
     [SerializeField] RectTransform Card;
     [SerializeField] GameObject cardPrefab;
     [SerializeField] RectTransform Shadow;
-     [SerializeField] GameObject ShadowcardPrefab;
+    [SerializeField] GameObject ShadowcardPrefab;
+    [SerializeField] Vector2 ShadowCardOffset = Vector2.zero;
     [SerializeField] SplineContainer splineContainer;
+    Spline spline;
     [SerializeField] RectTransform deck;
 
     [Header("Msic")]
@@ -27,6 +29,7 @@ public class CardHand : MonoBehaviour
     void Start()
     {
         inputReader.SpaceBar += DrawCard;
+        spline = splineContainer.Spline;
     }
 
     void DrawCard()
@@ -34,7 +37,7 @@ public class CardHand : MonoBehaviour
         if (handCards.Count >= maxHandSize) return;
 
         GameObject cardGO = Instantiate(cardPrefab, Card);
-        GameObject shadowGO = Instantiate(ShadowcardPrefab, Shadow);
+        GameObject shadowGO = Instantiate(ShadowcardPrefab, new Vector2(Shadow.position.x, Shadow.position.y) - ShadowCardOffset, Quaternion.identity, Shadow);
 
         RectTransform Cardrt = cardGO.GetComponent<RectTransform>();
         RectTransform Shadowrt = shadowGO.GetComponent<RectTransform>();
@@ -64,11 +67,29 @@ public class CardHand : MonoBehaviour
 
             Quaternion targetRot = Quaternion.Euler(0f, 0f, angle);
 
-            MoveCard(handCards[CardIndex].CardTransform, targetRot, localPos, Vector3.zero);
-            MoveCard(handCards[CardIndex].ShadowCardTransform, targetRot, localPos, new Vector3(0, 5, 0));
+            MoveCard(CardIndex, targetRot, new Vector2(localPos.x, localPos.y));
         }
     }
 
+    public void MoveCard(int CardIndex, Quaternion Rotation, Vector2 Position)
+    {
+        RectTransform[] CardTranform = new RectTransform[] 
+            {handCards[CardIndex].CardTransform, 
+            handCards[CardIndex].ShadowCardTransform};
+        if (
+            Vector2.Distance(CardTranform[0].anchoredPosition, Position) < 0.1f &&
+            Quaternion.Angle(CardTranform[0].localRotation, Rotation) < 0.5f
+            ) return;
+
+        CardTranform[0].DOKill();
+        CardTranform[1].DOKill();
+
+        CardTranform[0].DOAnchorPos(Position, slideDuration);
+        CardTranform[0].DOLocalRotateQuaternion(Rotation, slideDuration);
+
+        CardTranform[1].DOAnchorPos(Position - ShadowCardOffset, slideDuration);
+        CardTranform[1].DOLocalRotateQuaternion(Rotation, slideDuration);
+    }
     public float CardSpacing(int CardIndex)
     {
         int cardCount = handCards.Count;
@@ -78,21 +99,9 @@ public class CardHand : MonoBehaviour
         float adjustedNormalizedPosition = 0.5f + (normalizedCardPosition - 0.5f) * handSpread;
         return adjustedNormalizedPosition;
     }
-
-    public void MoveCard(RectTransform card, quaternion Rotation, Vector3 Position, Vector3 Offset)
-    {
-        if (
-            Vector2.Distance(card.anchoredPosition, Position - Offset) < 0.1f &&
-            Quaternion.Angle(card.localRotation, Rotation) < 0.5f
-            ) return;
-
-        card.DOKill();
-        card.DOAnchorPos(Position - Offset, slideDuration);
-        card.DOLocalRotateQuaternion(Rotation, slideDuration);
-    }
 }
 
-[System.Serializable] internal class CardData
+[System.Serializable] public class CardData
 {
     public RectTransform CardTransform;
     public RectTransform ShadowCardTransform;
