@@ -1,39 +1,54 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using DG.Tweening;
+using UnityEditor.ShaderKeywordFilter;
 
 public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private CardHandler cardhandler;
+    private CardManger cardmanger;
+    [SerializeField] float scalingFactor;
+    [SerializeField] float sacletime;
+    [SerializeField] Vector2 Positionfactor;
+
+    private Vector2 OrignalPosition;
+    private RectTransform rt;
+
+    [SerializeField] bool Effect;
     private int Cardindex = -1;
     void Start()
     {
-        cardhandler = GetComponentInParent<CardHandler>();
+        cardmanger = GetComponentInParent<CardManger>();
+        rt = GetComponent<RectTransform>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (Cardindex == -1 || cardhandler.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
-
-        cardhandler.handCards[Cardindex].IsSelected = true;
-
+        if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
+        cardmanger.MoveCard(Cardindex, Quaternion.identity, OrignalPosition + Positionfactor);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (Cardindex == -1 || cardhandler.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
+        if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
+        cardmanger.MoveCard(Cardindex, Quaternion.identity, OrignalPosition);
 
-        cardhandler.handCards[Cardindex].IsSelected = false;
     }
 
     public void findCardIndex()
     {
-        for (int i = 0; i < cardhandler.handCards.Count; i++)
+        for (int i = 0; i < cardmanger.handCards.Count; i++)
             {
-                if(cardhandler.handCards[i].CardTransform == GetComponent<RectTransform>())
+                if(cardmanger.handCards[i].CardTransform == GetComponent<RectTransform>())
                 {
                     Cardindex = i;
                     return;
                 }
             }
+    }
+
+    public void restPositon(Vector2 restpostion)
+    {
+        OrignalPosition = restpostion;
     }
 }

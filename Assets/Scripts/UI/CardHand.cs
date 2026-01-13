@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class CardHandler : MonoBehaviour
+public class CardManger : MonoBehaviour
 {
     [Header("CardInfo")]
     [SerializeField] float slideDuration = 0.5f;
@@ -19,7 +18,6 @@ public class CardHandler : MonoBehaviour
     [SerializeField] GameObject ShadowcardPrefab;
     [SerializeField] Vector2 ShadowCardOffset = Vector2.zero;
     [SerializeField] SplineContainer splineContainer;
-    Spline spline;
     [SerializeField] RectTransform deck;
 
     [Header("Msic")]
@@ -29,7 +27,6 @@ public class CardHandler : MonoBehaviour
     void Start()
     {
         inputReader.SpaceBar += DrawCard;
-        spline = splineContainer.Spline;
     }
 
     void DrawCard()
@@ -47,7 +44,7 @@ public class CardHandler : MonoBehaviour
         Shadowrt.anchoredPosition = Vector2.zero;
         Shadowrt.localRotation = Quaternion.identity;
 
-        handCards.Add(new CardData{CardTransform = Cardrt, IsSelected = false, ShadowCardTransform = Shadowrt});
+        handCards.Add(new CardData{CardTransform = Cardrt, ShadowCardTransform = Shadowrt});
         UpdateCardPositions();
     }
 
@@ -68,6 +65,7 @@ public class CardHandler : MonoBehaviour
             Quaternion targetRot = Quaternion.Euler(0f, 0f, angle);
 
             MoveCard(CardIndex, targetRot, new Vector2(localPos.x, localPos.y));
+            handCards[CardIndex].CardTransform.GetComponent<CardInfo>().restPositon(new Vector2(localPos.x, localPos.y));
         }
     }
 
@@ -105,5 +103,4 @@ public class CardHandler : MonoBehaviour
 {
     public RectTransform CardTransform;
     public RectTransform ShadowCardTransform;
-    public bool IsSelected;
 }
