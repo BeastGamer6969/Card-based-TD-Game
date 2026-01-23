@@ -44,7 +44,6 @@ public class BuildManger : MonoBehaviour
         {
             if(tiledata.Turret == null)
             {
-                SpwanTurret();
                 return;
             }
 
@@ -56,7 +55,13 @@ public class BuildManger : MonoBehaviour
             }
         }
         if (!ClickDown)
-        {
+        {   
+            if (CardTurret != null)
+            {
+                SpwanTurret();
+                return;   
+            }
+
             if(selectionData.Turret == null) return;
 
             if(tiledata.Turret == null) MoveTurret(tiledata.Tile);

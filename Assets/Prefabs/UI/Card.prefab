@@ -91,4 +91,5 @@ MonoBehaviour:
   scalingFactor: 1.1
   sacletime: 0.2
   Positionfactor: {x: 0, y: 100}
+  Turret: {fileID: 813639147976807283, guid: 9fd7965034c7b4b579cba83700e50fb6, type: 3}
   Effect: 0

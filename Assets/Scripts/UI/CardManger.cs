@@ -10,6 +10,7 @@ public class CardManger : MonoBehaviour
     [SerializeField] int maxHandSize = 5;
     [SerializeField] AnimationCurve spreadCurve;
     public List<CardData> handCards = new List<CardData>();
+    public GameObject Turret;
 
     [Header("References")]
     [SerializeField] RectTransform Card;
@@ -22,13 +23,27 @@ public class CardManger : MonoBehaviour
 
     [Header("Msic")]
     [SerializeField] InputReader inputReader;
+    private BuildManger buildManger;
 
 
     void Start()
     {
+        buildManger = Camera.main.GetComponentInChildren<BuildManger>();
         inputReader.SpaceBar += DrawCard;
+        inputReader.LeftClick += LeftMouseClick;
     }
 
+    void LeftMouseClick(bool ClickDown)
+    {
+        if (ClickDown)
+        {
+            buildManger.CardTurret = Turret;
+        }
+        if (!ClickDown)
+        {   
+            
+        }
+    }
     void DrawCard()
     {
         if (handCards.Count >= maxHandSize) return;

@@ -10,12 +10,15 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] float scalingFactor;
     [SerializeField] float sacletime;
     [SerializeField] Vector2 Positionfactor;
+    [SerializeField] GameObject Turret;
 
     private Vector2 OrignalPosition;
     private RectTransform rt;
 
     [SerializeField] bool Effect;
     private int Cardindex = -1;
+
+    
     void Start()
     {
         cardmanger = GetComponentInParent<CardManger>();
@@ -25,6 +28,7 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
+        cardmanger.Turret = Turret;
         cardmanger.MoveCard(Cardindex, Quaternion.identity, OrignalPosition + Positionfactor);
     }
 
