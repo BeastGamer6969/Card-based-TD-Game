@@ -12,6 +12,8 @@ public class CardManger : MonoBehaviour
     public List<CardData> handCards = new List<CardData>();
     public GameObject Turret;
 
+    [SerializeField] CardInfoObject[] cardInfoObjects;
+
     [Header("References")]
     [SerializeField] RectTransform Card;
     [SerializeField] GameObject cardPrefab;
@@ -47,8 +49,11 @@ public class CardManger : MonoBehaviour
     void DrawCard()
     {
         if (handCards.Count >= maxHandSize) return;
+        CardUiInfo newCardUiInfo = GenrateCard();
 
         GameObject cardGO = Instantiate(cardPrefab, Card);
+        cardGO.GetComponent<CardInfo>().cardUiInfo = newCardUiInfo;
+        
         GameObject shadowGO = Instantiate(ShadowcardPrefab, new Vector2(Shadow.position.x, Shadow.position.y) - ShadowCardOffset, Quaternion.identity, Shadow);
 
         RectTransform Cardrt = cardGO.GetComponent<RectTransform>();
@@ -111,6 +116,38 @@ public class CardManger : MonoBehaviour
         float handSpread = spreadCurve.Evaluate(normalizedHandFill);
         float adjustedNormalizedPosition = 0.5f + (normalizedCardPosition - 0.5f) * handSpread;
         return adjustedNormalizedPosition;
+    }
+
+    private CardUiInfo GenrateCard()
+    {
+        CardInfoObject cardInfoObject = cardInfoObjects[Random.Range(0, cardInfoObjects.Length - 1)];
+        int RarityTotalRange = 0;
+        for(int EachRarity = 0; EachRarity < cardInfoObject.Rarity.Length; EachRarity++)
+        {
+            RarityTotalRange += cardInfoObject.Rarity[EachRarity].Rarity_weight;
+        }
+
+        int ChosenRarity_weight = Random.Range(0, RarityTotalRange);
+        int ChosenRarity = 0;
+
+        for(int EachRarity = 0; EachRarity < cardInfoObject.Rarity.Length; EachRarity++)
+        {
+            if(ChosenRarity_weight <= cardInfoObject.Rarity[EachRarity].Rarity_weight)
+            {
+                ChosenRarity = EachRarity;
+                continue;
+            }
+        }
+
+        CardUiInfo cardUiInfo = new CardUiInfo
+        {
+            Title = cardInfoObject.Title,
+            Turret = cardInfoObject.Turret,
+            Tags = cardInfoObject.Tags,
+            description = cardInfoObject.description,
+            Rarity = cardInfoObject.Rarity[ChosenRarity]
+        };
+        return cardUiInfo;
     }
 }
 

@@ -5744,7 +5744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   CardTurret: {fileID: 0}
-  RemoveCardTurret: 0
+  RemoveCardTurret: 1
   CanMoveTurret: 0
   tiledata:
     Tile: {fileID: 0}
@@ -10684,6 +10684,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   handCards: []
   Turret: {fileID: 0}
+  cardInfoObjects:
+  - {fileID: 11400000, guid: fd1a0e1c576574765ab7cec127ce789e, type: 2}
   Card: {fileID: 5835573791269170227}
   cardPrefab: {fileID: 1996255368975391156, guid: ebe657f1045f149bc84fc9068365b694, type: 3}
   Shadow: {fileID: 1121621622}
