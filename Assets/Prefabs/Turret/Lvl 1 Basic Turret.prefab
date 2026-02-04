@@ -266,7 +266,7 @@ MonoBehaviour:
   TurnSpeed: 1
   EnemyTag: Enemy
   Damgae: 1
-  fireRate: 0.1
+  fireRate: 0.5
   CanShoot: 1
 --- !u!54 &794039584098776122
 Rigidbody:

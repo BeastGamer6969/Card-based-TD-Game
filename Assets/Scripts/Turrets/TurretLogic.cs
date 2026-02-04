@@ -80,8 +80,7 @@ public class TurretLogic : MonoBehaviour
     void Fire(GameObject Traget)
     {
         if (Traget != null){
-            EnemyStat EnemyHealth = Traget.GetComponent<EnemyStat>();
-            EnemyHealth.Health -= Damgae;
+            Traget.GetComponent<EnemyStat>().TakeDamage(Damgae);
         }
     }
 
