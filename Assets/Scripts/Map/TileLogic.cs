@@ -28,5 +28,6 @@ public class TileLogic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
      public void OnPointerExit(PointerEventData eventData)
     {
         Rend.material.color = BaseColor;
+        buildManger.tiledata.SetData(null, null);
     }
 }

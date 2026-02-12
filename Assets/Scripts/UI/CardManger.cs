@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 
 public class CardManger : MonoBehaviour
 {
@@ -11,7 +13,8 @@ public class CardManger : MonoBehaviour
     [SerializeField] AnimationCurve spreadCurve;
     public List<CardData> handCards = new List<CardData>();
     public GameObject Turret;
-
+    
+    [Header("Cards")]
     [SerializeField] CardInfoObject[] cardInfoObjects;
 
     [Header("References")]
@@ -20,8 +23,17 @@ public class CardManger : MonoBehaviour
     [SerializeField] RectTransform Shadow;
     [SerializeField] GameObject ShadowcardPrefab;
     [SerializeField] Vector2 ShadowCardOffset = Vector2.zero;
+    [SerializeField] GameObject DarknessAroundTheEdge;
+
+    [Header("Spline")]
     [SerializeField] SplineContainer splineContainer;
+    [SerializeField] bool UpdateSplineasf = false;
+
+    [Header("Deck")]
     [SerializeField] RectTransform deck;
+
+    [Header("InfoDescription")]
+    [SerializeField] float FadeTime;
 
     [Header("Msic")]
     [SerializeField] InputReader inputReader;
@@ -30,20 +42,36 @@ public class CardManger : MonoBehaviour
 
     void Start()
     {
+        DarknessAroundTheEdge.SetActive(false);
+
         buildManger = Camera.main.GetComponentInChildren<BuildManger>();
+
         inputReader.SpaceBar += DrawCard;
         inputReader.LeftClick += LeftMouseClick;
+        inputReader.Tab += TabScrean;
+    }
+
+    void Update()
+    {
+        if (UpdateSplineasf) UpdateCardPositions();
     }
 
     void LeftMouseClick(bool ClickDown)
     {
         if (ClickDown)
         {
-            buildManger.CardTurret = Turret;
+            if(Turret != null) buildManger.CardTurret = Turret;
+            Turret = null;
         }
-        if (!ClickDown)
-        {   
-            
+    }
+
+    void TabScrean(bool ClickDown)
+    {
+        if(ClickDown) Fadedarkness(true);
+        else 
+        {
+            Fadedarkness(false); 
+            DarknessAroundTheEdge.SetActive(false);
         }
     }
     void DrawCard()
@@ -85,15 +113,13 @@ public class CardManger : MonoBehaviour
             Quaternion targetRot = Quaternion.Euler(0f, 0f, angle);
 
             MoveCard(CardIndex, targetRot, new Vector2(localPos.x, localPos.y));
-            handCards[CardIndex].CardTransform.GetComponent<CardInfo>().restPositon(new Vector2(localPos.x, localPos.y));
+            handCards[CardIndex].CardTransform.GetComponent<CardInfo>().restPositon(new Vector2(localPos.x, localPos.y), targetRot);
         }
     }
 
     public void MoveCard(int CardIndex, Quaternion Rotation, Vector2 Position)
     {
-        RectTransform[] CardTranform = new RectTransform[] 
-            {handCards[CardIndex].CardTransform, 
-            handCards[CardIndex].ShadowCardTransform};
+        RectTransform[] CardTranform = {handCards[CardIndex].CardTransform, handCards[CardIndex].ShadowCardTransform};
         if (
             Vector2.Distance(CardTranform[0].anchoredPosition, Position) < 0.1f &&
             Quaternion.Angle(CardTranform[0].localRotation, Rotation) < 0.5f
@@ -148,6 +174,36 @@ public class CardManger : MonoBehaviour
             Rarity = cardInfoObject.Rarity[ChosenRarity]
         };
         return cardUiInfo;
+    }
+
+    void Fadedarkness(bool fadein)
+    {
+        DarknessAroundTheEdge.SetActive(true);
+        Image sprite = DarknessAroundTheEdge.GetComponent<Image>();
+        Color c = sprite.color;
+        float time = 0;
+        if (fadein)
+        {
+            c.a = 0f;
+            sprite.color = c;
+            while(time < FadeTime)
+            {
+                c.a += time/FadeTime;
+                sprite.color = c;
+                time += Time.deltaTime;
+            }
+        }
+        else
+        {
+            c.a = 1f;
+            sprite.color = c;
+            while(time < FadeTime)
+            {
+                c.a -= time/FadeTime;
+                sprite.color = c;
+                time += Time.deltaTime;
+            }
+        }
     }
 }
 

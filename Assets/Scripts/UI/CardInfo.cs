@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEditor.ShaderKeywordFilter;
 using TMPro;
+using Unity.Mathematics;
 
 public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -17,14 +18,13 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [Header("Card Postioning")]
     private CardManger cardmanger;
-    [SerializeField] float scalingFactor;
-    [SerializeField] float sacletime;
-    [SerializeField] Vector2 Positionfactor;
+    [SerializeField] Vector2 PositionDirection;
+    [SerializeField] float PositionScale;
 
     private Vector2 OrignalPosition;
+    private Quaternion OrignalQuaternion;
     private RectTransform rt;
 
-    [SerializeField] bool Effect;
     private int Cardindex = -1;
 
     void Start()
@@ -42,13 +42,14 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
         cardmanger.Turret = cardUiInfo.Turret.Turret;
-        cardmanger.MoveCard(Cardindex, Quaternion.identity, OrignalPosition + Positionfactor);
+        Vector2 WorldPos = transform.TransformDirection(PositionDirection.normalized);
+        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition + WorldPos*PositionScale);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
-        cardmanger.MoveCard(Cardindex, Quaternion.identity, OrignalPosition);
+        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition);
 
     }
 
@@ -64,9 +65,10 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
     }
 
-    public void restPositon(Vector2 restpostion)
+    public void restPositon(Vector2 restpostion, Quaternion restquaternion)
     {
         OrignalPosition = restpostion;
+        OrignalQuaternion = restquaternion;
     }
 }
 

@@ -11,6 +11,7 @@ public class InputReader : ScriptableObject, Controls.IPlayerActions
     public event Action<bool> LeftClick;
     public event Action<bool> RightClick;
     public event Action SpaceBar;
+    public event Action<bool> Tab;
 
     void OnEnable()
     {
@@ -69,4 +70,9 @@ public class InputReader : ScriptableObject, Controls.IPlayerActions
         if(context.started) SpaceBar?.Invoke();
     }
 
+    public void OnTab(InputAction.CallbackContext context)
+    {
+        if(context.started) Tab?.Invoke(true);
+        if(context.canceled) Tab?.Invoke(false);
+    }
 }

@@ -33,8 +33,11 @@ public class BuildManger : MonoBehaviour
     void Update()
     {
         if (!CanMoveTurret || selectionData.Turret == null) return;
-        selectionData.Turret.transform.SetParent(tiledata.Tile.transform);
-        selectionData.Turret.transform.position = Givepositon(selectionData.Turret, tiledata.Tile);
+        if (tiledata.Tile != null)
+        {
+            selectionData.Turret.transform.SetParent(tiledata.Tile.transform);
+            selectionData.Turret.transform.position = Givepositon(selectionData.Turret, tiledata.Tile);
+        }
     }
 
     void LeftMouseClick(bool ClickDown)
@@ -42,10 +45,7 @@ public class BuildManger : MonoBehaviour
         if (tiledata.Tile == null) return;
         if (ClickDown)
         {
-            if(tiledata.Turret == null)
-            {
-                return;
-            }
+            if(tiledata.Turret == null) return;
 
             if(selectionData.Turret == null)
             {
@@ -56,15 +56,15 @@ public class BuildManger : MonoBehaviour
         }
         if (!ClickDown)
         {   
-            if (CardTurret != null)
+            if (CardTurret != null && selectionData.Turret == null)
             {
                 SpwanTurret();
-                return;   
+                return;  
             }
 
             if(selectionData.Turret == null) return;
 
-            if(tiledata.Turret == null) MoveTurret(tiledata.Tile);
+            if(tiledata.Turret == null && tiledata.Tile != null) MoveTurret(tiledata.Tile);
             else if(CanUpgrade() == true) SpwanTurret(true);
             else MoveTurret(selectionData.Tile);
         }
