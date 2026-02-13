@@ -67,11 +67,15 @@ public class CardManger : MonoBehaviour
 
     void TabScrean(bool ClickDown)
     {
-        if(ClickDown) Fadedarkness(true);
+        if(ClickDown) 
+        {
+            StopCoroutine(Fadedarkness(false));
+            StartCoroutine(Fadedarkness(true));
+        }
         else 
         {
-            Fadedarkness(false); 
-            DarknessAroundTheEdge.SetActive(false);
+            StopCoroutine(Fadedarkness(true));
+            StartCoroutine(Fadedarkness(false)); 
         }
     }
     void DrawCard()
@@ -80,11 +84,11 @@ public class CardManger : MonoBehaviour
         CardUiInfo newCardUiInfo = GenrateCard();
 
         GameObject cardGO = Instantiate(cardPrefab, Card);
-        cardGO.GetComponent<CardInfo>().cardUiInfo = newCardUiInfo;
+        cardGO.GetComponentInChildren<CardInfo>().cardUiInfo = newCardUiInfo;
         
         GameObject shadowGO = Instantiate(ShadowcardPrefab, new Vector2(Shadow.position.x, Shadow.position.y) - ShadowCardOffset, Quaternion.identity, Shadow);
 
-        RectTransform Cardrt = cardGO.GetComponent<RectTransform>();
+        RectTransform Cardrt = cardGO.transform.GetChild(0).GetComponent<RectTransform>();
         RectTransform Shadowrt = shadowGO.GetComponent<RectTransform>();
 
         Cardrt.anchoredPosition = Vector2.zero;
@@ -113,13 +117,13 @@ public class CardManger : MonoBehaviour
             Quaternion targetRot = Quaternion.Euler(0f, 0f, angle);
 
             MoveCard(CardIndex, targetRot, new Vector2(localPos.x, localPos.y));
-            handCards[CardIndex].CardTransform.GetComponent<CardInfo>().restPositon(new Vector2(localPos.x, localPos.y), targetRot);
+            handCards[CardIndex].CardTransform.transform.parent.GetComponentInChildren<CardInfo>().restPositon(new Vector2(localPos.x, localPos.y), targetRot);
         }
     }
 
-    public void MoveCard(int CardIndex, Quaternion Rotation, Vector2 Position)
+    public void MoveCard(int CardIndex, Quaternion Rotation, Vector2 Position, bool MovePhantom = true)
     {
-        RectTransform[] CardTranform = {handCards[CardIndex].CardTransform, handCards[CardIndex].ShadowCardTransform};
+        RectTransform[] CardTranform = {handCards[CardIndex].CardTransform, handCards[CardIndex].ShadowCardTransform, handCards[CardIndex].CardTransform.parent.GetChild(1).GetComponent<RectTransform>()};
         if (
             Vector2.Distance(CardTranform[0].anchoredPosition, Position) < 0.1f &&
             Quaternion.Angle(CardTranform[0].localRotation, Rotation) < 0.5f
@@ -131,8 +135,16 @@ public class CardManger : MonoBehaviour
         CardTranform[0].DOAnchorPos(Position, slideDuration);
         CardTranform[0].DOLocalRotateQuaternion(Rotation, slideDuration);
 
-        CardTranform[1].DOAnchorPos(Position - ShadowCardOffset, slideDuration);
+        CardTranform[1].DOAnchorPos(Position + ShadowCardOffset, slideDuration);
         CardTranform[1].DOLocalRotateQuaternion(Rotation, slideDuration);
+
+        if (MovePhantom)
+        {
+            CardTranform[2].DOKill();
+
+            CardTranform[2].DOAnchorPos(Position, slideDuration);
+            CardTranform[2].DOLocalRotateQuaternion(Rotation, slideDuration);
+        }
     }
     public float CardSpacing(int CardIndex)
     {
@@ -176,33 +188,38 @@ public class CardManger : MonoBehaviour
         return cardUiInfo;
     }
 
-    void Fadedarkness(bool fadein)
+    IEnumerator Fadedarkness(bool fadein)
     {
         DarknessAroundTheEdge.SetActive(true);
         Image sprite = DarknessAroundTheEdge.GetComponent<Image>();
         Color c = sprite.color;
+        float startAlpha = fadein ? 0f : 1f;
+        float endAlpha   = fadein ? 1f : 0f;
         float time = 0;
         if (fadein)
         {
-            c.a = 0f;
-            sprite.color = c;
             while(time < FadeTime)
             {
-                c.a += time/FadeTime;
+                float t = time / FadeTime;
+                c.a = Mathf.Lerp(startAlpha, endAlpha, t);
                 sprite.color = c;
+
                 time += Time.deltaTime;
+                yield return null;
             }
         }
         else
         {
-            c.a = 1f;
-            sprite.color = c;
             while(time < FadeTime)
             {
-                c.a -= time/FadeTime;
+                float t = time / FadeTime;
+                c.a = Mathf.Lerp(startAlpha, endAlpha, t);
                 sprite.color = c;
+
                 time += Time.deltaTime;
+                yield return null;
             }
+            DarknessAroundTheEdge.SetActive(false);
         }
     }
 }

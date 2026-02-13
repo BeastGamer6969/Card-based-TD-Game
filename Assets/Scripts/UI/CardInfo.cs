@@ -20,6 +20,7 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private CardManger cardmanger;
     [SerializeField] Vector2 PositionDirection;
     [SerializeField] float PositionScale;
+    [SerializeField] Image RarityImage;
 
     private Vector2 OrignalPosition;
     private Quaternion OrignalQuaternion;
@@ -32,7 +33,7 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         cardmanger = GetComponentInParent<CardManger>();
         rt = GetComponent<RectTransform>();
 
-        GetComponent<Image>().sprite = cardUiInfo.Rarity.Rarity_Image;
+        RarityImage.sprite = cardUiInfo.Rarity.Rarity_Image;
         Title.text = cardUiInfo.Title;
         TurretPicture.GetComponent<Image>().sprite = cardUiInfo.Turret.Turret_Image;
         Description.text = cardUiInfo.description;
@@ -43,13 +44,13 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
         cardmanger.Turret = cardUiInfo.Turret.Turret;
         Vector2 WorldPos = transform.TransformDirection(PositionDirection.normalized);
-        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition + WorldPos*PositionScale);
+        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition + WorldPos*PositionScale, false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (Cardindex == -1 || cardmanger.handCards[Cardindex].CardTransform != GetComponent<RectTransform>()) findCardIndex();
-        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition);
+        cardmanger.MoveCard(Cardindex, OrignalQuaternion, OrignalPosition, false);
 
     }
 
@@ -57,7 +58,7 @@ public class CardInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         for (int i = 0; i < cardmanger.handCards.Count; i++)
             {
-                if(cardmanger.handCards[i].CardTransform == GetComponent<RectTransform>())
+                if(cardmanger.handCards[i].CardTransform.parent.GetChild(1).GetComponent<RectTransform>()  == GetComponent<RectTransform>())
                 {
                     Cardindex = i;
                     return;
